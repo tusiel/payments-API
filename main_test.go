@@ -4,10 +4,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"./config"
 )
 
 func TestGetRequest(t *testing.T) {
-	req, err := http.NewRequest("GET", "localhost:3005", nil)
+	req, err := http.NewRequest("GET", config.GetString("listenAddress"), nil)
 	if err != nil {
 		t.Fatalf("Error making GET request: %+v", err)
 	}

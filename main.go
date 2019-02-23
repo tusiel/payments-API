@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"time"
 
+	"./config"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -47,7 +49,7 @@ func start() {
 
 	srv := &http.Server{
 		Handler:      handler,
-		Addr:         "localhost:3005",
+		Addr:         config.GetString("listenAddress"),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
