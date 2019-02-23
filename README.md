@@ -3,6 +3,10 @@
 ## Summary
 This project was created as a technical exercise for Form3. 
 
+The application talks to a MongoDB database, but this could be easily replaced by changing the implementation in the `db` package. Because of how MongoDB handles document ID's this Application does not allow you to specify an ID on creation, unless creating a new primitive ObjectID. 
+
+The request will fail if one is specified, otherwise it will lead to unintended consequences in the future. 
+
 ## Project Design
 An overall architectural design can be found [here](https://github.com/tusiel/payments-api/blob/master/design/ArchitecturalDiagram.pdf) which shows how the Payments Manager microservice could be implemented from an infrastructure point of view. 
 
@@ -34,5 +38,3 @@ Example of a POST request to `/payments`
 
 ## Points of consideration
 - The `db_test.go` tests require a connection to MongoDB. These were designed as integration tests, not Unit Tests. 
-
-- When creating a new document do not specify an ID, unless creating a new primitive ObjectID. The request will fail if one is specified, otherwise it will lead to unintended consequences in the future. 
