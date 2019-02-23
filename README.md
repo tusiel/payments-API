@@ -20,6 +20,8 @@ Two scripts have been created to make the process of running this application ea
 - `run.sh` will run the application with the `--race` flag. This is intended to be for development purposes. 
 - `build.sh` will create a `build` folder, which will have `darwin` and `linux` compiled versions of the application. This is intended to be for production purposes. 
 
+The application will run according to the `listenAddress` specified in the `config.json` file, in the project root (defaults to `localhost:3005`). The MongoDB connection string, database name and collection can be configued in the same configuration file. 
+
 ## Endpoints
 
 | Method      | Endpoint | Description |
