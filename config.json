@@ -1,3 +1,6 @@
 {
-  "listenAddress": "localhost:3005"
+  "listenAddress": "localhost:3005",
+  "database": {
+    "connectionAddress": "mongodb://localhost:27017"
+  }
 }

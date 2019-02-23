@@ -9,6 +9,8 @@ An overall architectural design can be found [here](https://github.com/tusiel/pa
 A flow diagram of how the Payments Manager microservice can be found [here](https://github.com/tusiel/payments-api/blob/master/design/flowDiagram.pdf). It also outlines the specified endpoints the application will expose. 
 
 ## Running & building the application
+MongoDB is a prerequisite for running this application. A `docker-compose.yml` file has been added to the project so, if you don't have it installed locally, you can run it in a docker container by running `docker compose up`. 
+
 Two scripts have been created to make the process of running this application easier. 
 
 - `run.sh` will run the application with the `--race` flag. This is intended to be for development purposes. 
