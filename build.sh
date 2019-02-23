@@ -43,8 +43,4 @@ go build -o build/darwin/paymentsapi_$VER -ldflags="-X main.commit=${GIT_COMMIT}
 env GOOS=linux GOARCH=amd64 go build -o build/linux/paymentsapi_$VER -ldflags="-X main.commit=${GIT_COMMIT}"
 
 
-cp start.sh stop.sh tailLog.sh build/darwin
-cp start.sh stop.sh tailLog.sh link_latest.sh build/linux
-cp paymentsapi.service build/linux/paymentsapi.service.example
-
 echo $GIT_COMMIT > build/commit.dat
