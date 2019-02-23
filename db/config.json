@@ -2,7 +2,7 @@
   "listenAddress": "localhost:3005",
   "database": {
     "connectionAddress": "mongodb://localhost:27017",
-    "name": "payments",
+    "name": "testing",
     "collection": "payments"
   }
 }

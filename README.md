@@ -16,3 +16,5 @@ Two scripts have been created to make the process of running this application ea
 - `run.sh` will run the application with the `--race` flag. This is intended to be for development purposes. 
 - `build.sh` will create a `build` folder, which will have `darwin` and `linux` compiled versions of the application. This is intended to be for production purposes. 
 
+## Points of consideration
+- The `db_test.go` tests require a connection to MongoDB. These were designed as integration tests, not Unit Tests. 
