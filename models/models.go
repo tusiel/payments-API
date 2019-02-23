@@ -1,12 +1,14 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 // Payment is the overall payment model
 type Payment struct {
-	Type           string     `json:"type,omitempty" bson:"type,omitempty"`
-	ID             string     `json:"_id,omitempty" bson:"_id,omitempty"`
-	Version        uint16     `json:"version" bson:"version"`
-	OrganisationID string     `json:"organisation_id,omitempty" bson:"organisation_id,omitempty"`
-	Attributes     Attributes `json:"attributes,omitempty" bson:"attributes,omitempty"`
+	Type           string              `json:"type,omitempty" bson:"type,omitempty"`
+	ID             *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Version        uint16              `json:"version" bson:"version"`
+	OrganisationID string              `json:"organisation_id,omitempty" bson:"organisation_id,omitempty"`
+	Attributes     Attributes          `json:"attributes,omitempty" bson:"attributes,omitempty"`
 }
 
 // Attributes is the Attributes model

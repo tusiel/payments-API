@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"../models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestMain(m *testing.M) {
@@ -22,10 +23,15 @@ func TestMain(m *testing.M) {
 func TestGetAll(t *testing.T) {
 	var err error
 
-	payment1 := models.Payment{ID: "1"}
-	payment2 := models.Payment{ID: "2"}
-	payment3 := models.Payment{ID: "3"}
-	payment4 := models.Payment{ID: "4"}
+	id1 := primitive.NewObjectID()
+	id2 := primitive.NewObjectID()
+	id3 := primitive.NewObjectID()
+	id4 := primitive.NewObjectID()
+
+	payment1 := models.Payment{ID: &id1}
+	payment2 := models.Payment{ID: &id2}
+	payment3 := models.Payment{ID: &id3}
+	payment4 := models.Payment{ID: &id4}
 
 	_, err = InsertPayment(payment1)
 	_, err = InsertPayment(payment2)
@@ -48,8 +54,11 @@ func TestGetAll(t *testing.T) {
 func TestGetByID(t *testing.T) {
 	var err error
 
-	payment1 := models.Payment{ID: "1"}
-	payment2 := models.Payment{ID: "id-to-test", Type: "Payment", OrganisationID: "organisation-to-test"}
+	id1 := primitive.NewObjectID()
+	id2 := primitive.NewObjectID()
+
+	payment1 := models.Payment{ID: &id1}
+	payment2 := models.Payment{ID: &id2, Type: "Payment", OrganisationID: "organisation-to-test"}
 
 	_, err = InsertPayment(payment1)
 	_, err = InsertPayment(payment2)
@@ -57,13 +66,13 @@ func TestGetByID(t *testing.T) {
 		t.Errorf("Insert failed: %+v", err)
 	}
 
-	payment, err := GetPaymentByID("id-to-test")
+	payment, err := GetPaymentByID(id2)
 	if err != nil {
 		t.Errorf("GetAll failed: %+v", err)
 	}
 
-	if payment.ID != "id-to-test" {
-		t.Errorf("Expected ID to be %s, but got '%s'", "id-to-test", payment.ID)
+	if payment.ID.String() != id2.String() {
+		t.Errorf("Expected ID to be %s, but got '%s'", &id2, payment.ID)
 	}
 
 	if payment.Type != "Payment" {
@@ -88,8 +97,10 @@ func TestInsert(t *testing.T) {
 }
 
 func TestUpdatePaymentByID(t *testing.T) {
+	id1 := primitive.NewObjectID()
+
 	payment := models.Payment{
-		ID:             "id-to-test",
+		ID:             &id1,
 		Type:           "Payment",
 		OrganisationID: "shouldnt-change",
 	}
@@ -103,14 +114,14 @@ func TestUpdatePaymentByID(t *testing.T) {
 		Type: "SomethingElse",
 	}
 
-	err = UpdatePaymentByID("id-to-test", updatedPayment)
+	err = UpdatePaymentByID(id1, updatedPayment)
 	if err != nil {
 		t.Errorf("Update failed: %+v", err)
 	}
 
-	p, err := GetPaymentByID("id-to-test")
+	p, err := GetPaymentByID(id1)
 
-	if p.ID != "id-to-test" {
+	if p.ID.String() != id1.String() {
 		t.Error("ID updated when it shouldn't have")
 	}
 
@@ -125,18 +136,20 @@ func TestUpdatePaymentByID(t *testing.T) {
 }
 
 func TestDeleteByID(t *testing.T) {
+	id1 := primitive.NewObjectID()
+
 	payment := models.Payment{
-		ID:             "id-to-test",
+		ID:             &id1,
 		Type:           "Payment",
 		OrganisationID: "org-id",
 	}
 
-	insertedID, err := InsertPayment(payment)
+	_, err := InsertPayment(payment)
 	if err != nil {
 		t.Errorf("Insert failed: %+v", err)
 	}
 
-	deleteCount, err := DeletePaymentByID(insertedID.(string))
+	deleteCount, err := DeletePaymentByID(id1)
 	if err != nil {
 		t.Errorf("Delete failed: %+v", err)
 	}
@@ -144,5 +157,4 @@ func TestDeleteByID(t *testing.T) {
 	if deleteCount != 1 {
 		t.Errorf("Expected delete count to be 1, but got %d", deleteCount)
 	}
-
 }

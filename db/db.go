@@ -9,6 +9,7 @@ import (
 
 	"../config"
 	"../models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -59,7 +60,7 @@ func GetAllPayments() (payments []models.Payment, err error) {
 }
 
 // GetPaymentByID returns a single payment by it's ID
-func GetPaymentByID(id string) (payment models.Payment, err error) {
+func GetPaymentByID(id primitive.ObjectID) (payment models.Payment, err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -92,7 +93,7 @@ func InsertPayment(payment models.Payment) (insertedID interface{}, err error) {
 }
 
 // UpdatePaymentByID takes an ID and a Payment model and updates it
-func UpdatePaymentByID(id string, payment models.Payment) (err error) {
+func UpdatePaymentByID(id primitive.ObjectID, payment models.Payment) (err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -107,7 +108,7 @@ func UpdatePaymentByID(id string, payment models.Payment) (err error) {
 }
 
 // DeletePaymentByID takes an ID and deletes the payment
-func DeletePaymentByID(id string) (deleteCount int64, err error) {
+func DeletePaymentByID(id primitive.ObjectID) (deleteCount int64, err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

@@ -9,6 +9,7 @@ import (
 
 	"./config"
 	"./middleware"
+	"./routes"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -38,11 +39,11 @@ func start() {
 	/** API Routes */
 	api := router.PathPrefix("/api/v1").Subrouter()
 
-	api.HandleFunc("/payments", simpleHandler).Methods("GET")
-	api.HandleFunc("/payments/{id}", simpleHandler).Methods("GET")
-	api.HandleFunc("/payment", simpleHandler).Methods("POST")
-	api.HandleFunc("/payment/{id}", simpleHandler).Methods("PUT")
-	api.HandleFunc("/payment/{id}", simpleHandler).Methods("DELETE")
+	api.HandleFunc("/payments", routes.HandleGetAll).Methods("GET")
+	api.HandleFunc("/payment/{id}", routes.HandleGetByID).Methods("GET")
+	api.HandleFunc("/payment", routes.HandleInsert).Methods("POST")
+	api.HandleFunc("/payment/{id}", routes.HandleUpdateByID).Methods("PUT")
+	api.HandleFunc("/payment/{id}", routes.HandleDelete).Methods("DELETE")
 
 	var handler http.Handler
 	handler = router
@@ -57,9 +58,4 @@ func start() {
 	}
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-func simpleHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(200)
-	w.Write([]byte("Hello World"))
 }
