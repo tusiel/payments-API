@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"./config"
+	"./middleware"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -46,6 +47,7 @@ func start() {
 	var handler http.Handler
 	handler = router
 	handler = handlers.LoggingHandler(os.Stdout, handler)
+	handler = middleware.RemoveTrailingSlash(handler)
 
 	srv := &http.Server{
 		Handler:      handler,
