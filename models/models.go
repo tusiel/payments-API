@@ -6,7 +6,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type Payment struct {
 	Type           string              `json:"type,omitempty" bson:"type,omitempty"`
 	ID             *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	Version        uint16              `json:"version" bson:"version"`
+	Version        *uint16             `json:"version,omitempty" bson:"version,omitempty"`
 	OrganisationID string              `json:"organisation_id,omitempty" bson:"organisation_id,omitempty"`
 	Attributes     Attributes          `json:"attributes,omitempty" bson:"attributes,omitempty"`
 }
@@ -34,14 +34,14 @@ type Attributes struct {
 
 // BeneficiaryParty is the BeneficiaryParty model
 type BeneficiaryParty struct {
-	AccountName       string `json:"account_name,omitempty" bson:"account_name,omitempty"`
-	AccountNumber     string `json:"account_number,omitempty" bson:"account_number,omitempty"`
-	AccountNumberCode string `json:"account_number_code,omitempty" bson:"account_number_code,omitempty"`
-	AccountType       uint16 `json:"account_type" bson:"account_type"`
-	Address           string `json:"address,omitempty" bson:"address,omitempty"`
-	BankID            string `json:"bank_id,omitempty" bson:"bank_id,omitempty"`
-	BankIDCode        string `json:"bank_id_code,omitempty" bson:"bank_id_code,omitempty"`
-	Name              string `json:"name,omitempty" bson:"name,omitempty"`
+	AccountName       string  `json:"account_name,omitempty" bson:"account_name,omitempty"`
+	AccountNumber     string  `json:"account_number,omitempty" bson:"account_number,omitempty"`
+	AccountNumberCode string  `json:"account_number_code,omitempty" bson:"account_number_code,omitempty"`
+	AccountType       *uint16 `json:"account_type,omitempty" bson:"account_type,omitempty"`
+	Address           string  `json:"address,omitempty" bson:"address,omitempty"`
+	BankID            string  `json:"bank_id,omitempty" bson:"bank_id,omitempty"`
+	BankIDCode        string  `json:"bank_id_code,omitempty" bson:"bank_id_code,omitempty"`
+	Name              string  `json:"name,omitempty" bson:"name,omitempty"`
 }
 
 // ChargesInformation is the ChargesInformation model
