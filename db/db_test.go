@@ -12,6 +12,7 @@ import (
 func TestMain(m *testing.M) {
 	retCode := m.Run()
 
+	// Clean the database after all tests have run
 	err := deleteAll()
 	if err != nil {
 		log.Printf("Error deleting all records after tests: %+v", err)
@@ -21,7 +22,11 @@ func TestMain(m *testing.M) {
 
 }
 func TestGetAll(t *testing.T) {
-	var err error
+	// This test must have a clean database
+	err := deleteAll()
+	if err != nil {
+		log.Printf("Error deleting all records after tests: %+v", err)
+	}
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -66,9 +71,10 @@ func TestGetByID(t *testing.T) {
 		t.Errorf("Insert failed: %+v", err)
 	}
 
-	payment, err := GetPaymentByID(id2)
+	payment, err := GetPaymentByID(id2.Hex())
 	if err != nil {
 		t.Errorf("GetAll failed: %+v", err)
+		return
 	}
 
 	if payment.ID.String() != id2.String() {
@@ -85,14 +91,29 @@ func TestGetByID(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
+	// This test must have a clean database
+	err := deleteAll()
+	if err != nil {
+		log.Printf("Error deleting all records after tests: %+v", err)
+	}
+
 	payment := models.Payment{
 		Type:           "Payment",
 		OrganisationID: "123456",
 	}
 
-	_, err := InsertPayment(payment)
+	_, err = InsertPayment(payment)
 	if err != nil {
 		t.Errorf("Insert failed: %+v", err)
+	}
+
+	payments, err := GetAllPayments()
+	if err != nil {
+		t.Errorf("GetAll failed: %+v", err)
+	}
+
+	if len(payments) != 1 {
+		t.Errorf("Expected 1 payment but got %d", len(payments))
 	}
 }
 
@@ -114,14 +135,14 @@ func TestUpdatePaymentByID(t *testing.T) {
 		Type: "SomethingElse",
 	}
 
-	err = UpdatePaymentByID(id1, updatedPayment)
+	err = UpdatePaymentByID(id1.Hex(), updatedPayment)
 	if err != nil {
 		t.Errorf("Update failed: %+v", err)
 	}
 
-	p, err := GetPaymentByID(id1)
+	p, err := GetPaymentByID(id1.Hex())
 
-	if p.ID.String() != id1.String() {
+	if p.ID.Hex() != id1.Hex() {
 		t.Error("ID updated when it shouldn't have")
 	}
 
@@ -149,7 +170,7 @@ func TestDeleteByID(t *testing.T) {
 		t.Errorf("Insert failed: %+v", err)
 	}
 
-	deleteCount, err := DeletePaymentByID(id1)
+	deleteCount, err := DeletePaymentByID(id1.Hex())
 	if err != nil {
 		t.Errorf("Delete failed: %+v", err)
 	}

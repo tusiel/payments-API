@@ -60,13 +60,18 @@ func GetAllPayments() (payments []models.Payment, err error) {
 }
 
 // GetPaymentByID returns a single payment by it's ID
-func GetPaymentByID(id primitive.ObjectID) (payment models.Payment, err error) {
+func GetPaymentByID(id string) (payment models.Payment, err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = collection.FindOne(ctx, bson.M{"_id": id}).Decode(&payment)
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return
+	}
+
+	err = collection.FindOne(ctx, bson.M{"_id": objectID}).Decode(&payment)
 	if err != nil {
 		return
 	}
@@ -93,13 +98,18 @@ func InsertPayment(payment models.Payment) (insertedID interface{}, err error) {
 }
 
 // UpdatePaymentByID takes an ID and a Payment model and updates it
-func UpdatePaymentByID(id primitive.ObjectID, payment models.Payment) (err error) {
+func UpdatePaymentByID(id string, payment models.Payment) (err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err = collection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": payment})
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": payment})
 	if err != nil {
 		return err
 	}
@@ -108,13 +118,18 @@ func UpdatePaymentByID(id primitive.ObjectID, payment models.Payment) (err error
 }
 
 // DeletePaymentByID takes an ID and deletes the payment
-func DeletePaymentByID(id primitive.ObjectID) (deleteCount int64, err error) {
+func DeletePaymentByID(id string) (deleteCount int64, err error) {
 	collection := client.Database(config.GetString("database.name")).Collection(config.GetString("database.collection"))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	res, err := collection.DeleteOne(ctx, bson.M{"_id": id})
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return
+	}
+
+	res, err := collection.DeleteOne(ctx, bson.M{"_id": objectID})
 	if err != nil {
 		return 0, err
 	}

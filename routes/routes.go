@@ -9,7 +9,6 @@ import (
 	"../db"
 	"../models"
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // HandleGetAll returns all documents
@@ -31,12 +30,7 @@ func HandleGetAll(w http.ResponseWriter, r *http.Request) {
 func HandleGetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		log.Printf("Error converting ID to Object ID: %+v", err)
-	}
-
-	payment, err := db.GetPaymentByID(objectID)
+	payment, err := db.GetPaymentByID(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(fmt.Sprintf("Unable to get payment: %+v", err)))
@@ -76,11 +70,6 @@ func HandleInsert(w http.ResponseWriter, r *http.Request) {
 func HandleUpdateByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		log.Printf("Error converting ID to Object ID: %+v", err)
-	}
-
 	var payment models.Payment
 
 	decoder := json.NewDecoder(r.Body)
@@ -92,7 +81,7 @@ func HandleUpdateByID(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err = db.UpdatePaymentByID(objectID, payment)
+	err := db.UpdatePaymentByID(id, payment)
 	if err != nil {
 		log.Printf("Error updating payment: %+v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -106,12 +95,7 @@ func HandleUpdateByID(w http.ResponseWriter, r *http.Request) {
 func HandleDelete(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		log.Printf("Error converting ID to Object ID: %+v", err)
-	}
-
-	deleteCount, err := db.DeletePaymentByID(objectID)
+	deleteCount, err := db.DeletePaymentByID(id)
 	if err != nil {
 		log.Printf("Error deleting payment: %+v", err)
 		w.WriteHeader(http.StatusBadRequest)
