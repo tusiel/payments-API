@@ -40,3 +40,7 @@ Example of a POST request to `/payments`
 
 ## Points of consideration
 - The `db_test.go` tests require a connection to MongoDB. These were designed as integration tests, not Unit Tests. 
+
+## Next Steps
+- Investigate Go Integration Testing strategies, to ensure this application has implemented them properly.
+- Investigate how to perform Unit Test setup/teardown for each test, to avoid duplication (`deleteAll` method called multiple times)
